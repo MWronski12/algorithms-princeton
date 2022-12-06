@@ -16,7 +16,7 @@ public class LineSegment {
     }
 
     public String toString() {
-        return "(" + p.toString() + ", " + q.toString() + ")";
+        return p.toString() + " --> " + q.toString();
     }
 
     static public void main(String[] args) {
