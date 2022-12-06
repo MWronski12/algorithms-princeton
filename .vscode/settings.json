@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": [
+        "src\\algorithms",
+        "src\\datastructures",
+        "src\\projects"
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
