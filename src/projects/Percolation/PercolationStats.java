@@ -75,16 +75,16 @@ public class PercolationStats {
 
     // test client (see below)
     public static void main(String[] args) {
-        if (args.length != 3) {
-            throw new IllegalArgumentException("PercolationStats <n> <trials>");
+        if (args.length != 2) {
+            throw new IllegalArgumentException("PercolationStats <grid_size> <num_of_trials>");
         }
 
         int n;
         int trials;
 
         try {
-            n = Integer.parseInt(args[1]);
-            trials = Integer.parseInt(args[2]);
+            n = Integer.parseInt(args[0]);
+            trials = Integer.parseInt(args[1]);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }

@@ -144,6 +144,6 @@ public class Percolation {
         String n = StdIn.readString();
         StdOut.println("Pass number of trials:");
         String trial = StdIn.readString();
-        PercolationStats.main(new String[] {"PercolationStats", n, trial});
+        PercolationStats.main(new String[] {n, trial});
     }
 }

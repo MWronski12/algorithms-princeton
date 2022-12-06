@@ -2,7 +2,7 @@
     "java.project.sourcePaths": [
         "src\\algorithms",
         "src\\datastructures",
-        "src\\projects"
+        "src\\projects",
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
