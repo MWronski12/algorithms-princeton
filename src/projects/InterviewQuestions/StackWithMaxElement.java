@@ -3,7 +3,7 @@ package InterviewQuestions;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-class StackWithMaxElement<Item> extends Stack<Item> implements Iterable<Item> {
+class StackWithMaxElement<Item> extends Stack<Item> {
 
     private Item max;
 
