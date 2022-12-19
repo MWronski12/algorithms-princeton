@@ -13,7 +13,7 @@ public class Quick {
     }
 
     private static void sort(Comparable[] arr, int lo, int hi) {
-        if (hi < lo)
+        if (hi <= lo)
             return;
         int n = partition(arr, lo, hi);
         sort(arr, lo, n - 1);
@@ -21,26 +21,30 @@ public class Quick {
     }
 
     private static int partition(Comparable[] arr, int lo, int hi) {
-        int i = lo + 1;
-        int j = hi;
+        int i = lo;
+        int j = hi + 1;
 
         while (true) {
 
-            while (i < hi && less(arr[i], arr[lo])) {
-                i++;
+            while (less(arr[++i], arr[lo])) {
+                if (i == hi)
+                    break;
             }
 
-            while (j > lo && !less(arr[j], arr[lo])) {
-                j--;
+            while (less(arr[lo], arr[--j])) {
+                if (j == lo) {
+                    break;
+                }
             }
 
             if (i >= j) {
-                exch(arr, lo, j);
-                return j;
+                break;
             }
-
             exch(arr, i, j);
         }
+
+        exch(arr, lo, j);
+        return j;
     }
 
     private static void exch(Comparable[] arr, int i, int j) {
