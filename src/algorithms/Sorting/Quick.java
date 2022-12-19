@@ -5,6 +5,15 @@ import java.util.Arrays;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
+/*
+ * Time complexity: O(N^2) - theoretical worst case scenario
+ * Space complexity: O(1)
+ *
+ * Though the running time in worst case scenario is O(N^2),
+ * which happens when the array is already sorted,
+ * actual running time on average is ~ 2N * ln(N) ~ 1.39N * lg(N).
+ */
+
 public class Quick {
 
     public static void sort(Comparable[] arr) {
