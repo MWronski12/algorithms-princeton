@@ -6,80 +6,95 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FastCollinearPoints {
-    private final Point[] points;
 
-    // Make sure no null Points were passed and initialize points array
+    private Point[] points;
+    private LineSegment[] segments;
+
     public FastCollinearPoints(Point[] points) {
-        for (Point p : points) {
-            if (p == null)
-                throw new IllegalArgumentException("Null point found in points array!");
-        }
+        checkForNullPoints(points);
+        checkForDuplicatePoints(points);
         this.points = Arrays.copyOf(points, points.length);
     }
 
     // Get number of LineSegments that contain 4 or more collinear points
     public int numberOfSegments() {
-        return segments().length;
+        if (this.segments == null) {
+            return this.segments().length;
+        }
+        return this.segments.length;
     }
 
     // Get all LineSegments that contain 4 or more collinear points
     public LineSegment[] segments() {
 
-        LineSegment[] lineSegments = new LineSegment[points.length];
-        int numOfLineSegments = 0;
-
+        Arrays.sort(this.points);
         Point[] aux = Arrays.copyOf(this.points, this.points.length);
 
-        for (Point referencePoint : points) {
-            // Sort the array in respect to the slope they make with referencePoint
-            Comparator<Point> comparator = referencePoint.slopeOrder();
+        HashMap<Point, Point> lineSegmentsMap = new HashMap<>();
+
+        for (Point origin : points) {
+            
+            // Stable sort the array in respect to the slope points make with origin
+            Comparator<Point> comparator = origin.slopeOrder();
+            Arrays.sort(aux);
             Arrays.sort(aux, comparator);
 
-            int i = 1; // slope of the same points is negative infinity -> aux[0] = referencePoint
-            int numOfCollinearPoints = 2; // must be at least 2 points
-            Point min = referencePoint;
-            Point max = referencePoint;
+            int i = 1; // Skip aux[0] which is origin
+            int numOfCollinearPoints = 2; // Origin and 1st in series
 
-            while (i < aux.length) { // Find series of adjecent collinear points
+            // Find series of adjecent points with equal slopes in respect to origin
+            while (i < aux.length) {
 
-                // Keep track of min and max to consider only the longest LineSegment
-                if (aux[i].compareTo(min) < 0)
-                    min = aux[i];
-                if (aux[i].compareTo(max) > 0)
-                    max = aux[i];
-
-                if (i != aux.length - 1 && referencePoint.slopeTo(aux[i]) == referencePoint.slopeTo(aux[i + 1])) {
-                    numOfCollinearPoints++;
-                } else {
+                if (i == aux.length - 1 || origin.slopeTo(aux[i]) != origin.slopeTo(aux[i + 1])) {
                     // Last collinear point in a series was reached
-                    if (numOfCollinearPoints >= 4) {
-                        LineSegment newLineSegment = new LineSegment(min, max);
-                        if (LineSegmentIsNew(lineSegments, numOfLineSegments, newLineSegment))
-                            lineSegments[numOfLineSegments++] = newLineSegment;
+                    if (numOfCollinearPoints >= 4
+                            && lineSegmentsMap.get(origin) == null
+                            && lineSegmentsMap.get(aux[i]) == null) {
+                        lineSegmentsMap.put(aux[i], origin);
                     }
-                    // Reset indicators
-                    min = referencePoint;
-                    max = referencePoint;
                     numOfCollinearPoints = 2;
+
+                } else {
+                    numOfCollinearPoints++;
                 }
+
                 i++;
             }
         }
-        return Arrays.copyOf(lineSegments, numOfLineSegments);
+
+        this.segments = hashMapToArray(lineSegmentsMap);
+        return this.segments;
     }
 
-    private boolean LineSegmentIsNew(LineSegment[] lineSegments, int numOfLineSegments, LineSegment newLineSegment) {
-        boolean isNew = true;
-        for (int i = 0; i < numOfLineSegments; i++) {
-            if (newLineSegment.p.compareTo(lineSegments[i].p) == 0
-                    && newLineSegment.q.compareTo(lineSegments[i].q) == 0) {
-                isNew = false;
-                break;
+    private LineSegment[] hashMapToArray(HashMap<Point, Point> map) {
+        int size = map.size();
+        LineSegment[] segments = new LineSegment[size];
+        int i = 0;
+        for (Map.Entry<Point, Point> entry : map.entrySet()) {
+            segments[i++] = new LineSegment(entry.getValue(), entry.getKey());
+        }
+        return segments;
+    }
+
+    private void checkForNullPoints(Point[] points) {
+        for (Point p : points) {
+            if (p == null) {
+                throw new IllegalArgumentException("Found null point in the array!");
             }
         }
-        return isNew;
+    }
+
+    private void checkForDuplicatePoints(Point[] points) {
+        Arrays.sort(points);
+        for (int i = 0; i < points.length - 1; i++) {
+            if (points[i].compareTo(points[i + 1]) == 0) {
+                throw new IllegalArgumentException("Found duplicate points in the array!");
+            }
+        }
     }
 
     public static void main(String[] args) {
